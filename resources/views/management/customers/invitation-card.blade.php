@@ -54,9 +54,11 @@
             border-radius: inherit;
             padding-top: clamp(44px, 12cqw, 60px);
         }
-        .exhibitor-logo-frame { width: 160px; height: 160px; }
-        @media (min-width: 640px) {
-            .exhibitor-logo-frame { width: 176px; height: 176px; }
+        .exhibitor-logo-frame {
+            width: min(56cqw, 260px);
+            aspect-ratio: 1;
+            height: auto;
+            flex-shrink: 0;
         }
         .parchment-paper {
             background-color: var(--invitation-paper);
@@ -148,7 +150,7 @@
             position: absolute;
             inset-inline: var(--door-panel-inset);
             overflow: hidden;
-            border: 1px solid #536079;
+            border: 1px solid #8d7958;
             background: var(--invitation-blue);
             box-shadow: inset 0 3px 9px #010712, 0 1px 0 #304360;
         }
@@ -156,7 +158,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: url("{{ asset('images/door-art-deco-lower.svg') }}") center / cover no-repeat;
+            background: url("{{ asset('images/door-art-deco-lower-v2.svg') }}") center / cover no-repeat;
             pointer-events: none;
         }
         .invitation-door-leaf--right .door-panel::before { transform: scaleX(-1); }
@@ -183,10 +185,10 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 16px;
-            height: 6px;
+            width: 24px;
+            height: 4px;
             border: 1px solid var(--invitation-gold);
-            border-radius: 50%;
+            border-radius: 2px;
             background: var(--invitation-blue);
             transform: translate(-50%, -50%);
         }
@@ -207,36 +209,37 @@
         .invitation-door-handle {
             position: absolute;
             z-index: 3;
-            top: 55%;
-            width: 29px;
-            height: 54px;
+            top: 54%;
+            width: 20px;
+            height: 76px;
             border: 1px solid #b49a6b;
-            border-radius: 15px 15px 8px 8px;
+            border-radius: 10px;
             background: #96794b;
-            box-shadow: inset 2px 1px 0 #d8c095, 2px 3px 6px #010813;
+            box-shadow: inset 2px 1px 0 #d8c095, inset -2px 0 #6f5731, 2px 3px 6px #010813;
         }
         .invitation-door-handle::before {
             content: "";
             position: absolute;
-            top: 8px;
-            left: 9px;
-            width: 8px;
-            height: 8px;
+            top: 6px;
+            left: 7px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background: #e1cba4;
-            box-shadow: 0 1px 2px #30200b;
+            box-shadow: 0 62px #e1cba4;
         }
         .invitation-door-handle::after {
             content: "";
             position: absolute;
-            top: 13px;
-            left: 1px;
-            width: 25px;
-            height: 31px;
-            border: 4px solid #c5ab7e;
-            border-radius: 50%;
+            top: 17px;
+            left: 4px;
+            width: 10px;
+            height: 40px;
+            border: 1px solid #dfc89d;
+            border-radius: 6px;
+            background: #c5ab7e;
             box-sizing: border-box;
-            box-shadow: inset 1px 1px #ead6ae, 1px 3px 2px #020814;
+            box-shadow: inset 2px 0 #ead6ae, 3px 2px 3px #020814;
         }
         .invitation-door-leaf--left .invitation-door-handle { right: 18px; }
         .invitation-door-leaf--right .invitation-door-handle { left: 18px; }
@@ -255,13 +258,13 @@
         .invitation-door-seal {
             display: grid;
             place-items: center;
-            width: 68%;
+            width: 64%;
             gap: 12px;
             padding: 18px 14px;
             border: 1px solid var(--invitation-gold);
-            border-radius: 5px;
+            border-radius: 8px;
             background: var(--invitation-paper-light);
-            box-shadow: 0 4px 12px #020a18;
+            box-shadow: inset 0 1px #fff3d9, 0 6px 18px #020a18;
         }
         .invitation-door-seal img { width: 100%; height: auto; max-height: 60px; object-fit: contain; }
         .invitation-door-details {
@@ -276,10 +279,10 @@
         .invitation-door-date { font-weight: 700; }
         .invitation-door-open {
             position: absolute;
-            bottom: 10%;
+            bottom: 8%;
             padding: 13px 25px;
             border: 1px solid var(--invitation-gold);
-            border-radius: 5px;
+            border-radius: 6px;
             background: var(--invitation-gold-light);
             color: var(--invitation-ink);
             font: 700 .65rem 'Cinzel', Georgia, serif;
@@ -308,29 +311,38 @@
             .invitation-door-leaf--right .invitation-door-handle { left: 10px; }
         }
         @media screen and (max-width: 639px) {
-            .invitation-page-body { padding: 8px; justify-content: flex-start; }
-            .print-card-wrapper { margin-block: 0; padding-block: 4px; --invitation-frame-inset: 10px; }
-            .rounded-card-frame .parchment-paper { padding: 38px 12px 12px; }
-            .invitation-heading h2 { font-size: 20px; line-height: 1.4; }
-            .invitation-heading p { font-size: 12px; line-height: 1.6; margin-top: 2px; }
-            .invitation-ornament { margin-block: 4px; }
-            .invitation-ornament svg { width: 160px; height: 22px; }
-            .invitation-honor { font-size: 8px; line-height: 1.5; letter-spacing: .16em; }
-            .exhibitor-logo-wrapper { margin-top: 6px; margin-bottom: 3px; }
+            .invitation-page-body { min-height: 100svh; padding: 8px; justify-content: center; }
+            .print-card-wrapper {
+                --invitation-content-unit: clamp(.55px, calc(.2svh - .7px), 1px);
+                margin-block: 0;
+                padding-block: 4px;
+                --invitation-frame-inset: 10px;
+            }
+            html.invitation-intro-active .invitation-download { display: none; }
+            .rounded-card-frame .parchment-paper {
+                min-height: calc(80svh - 20px);
+                padding: calc(38 * var(--invitation-content-unit)) 12px calc(12 * var(--invitation-content-unit));
+                justify-content: space-evenly;
+            }
+            .invitation-heading h2 { font-size: clamp(16px, calc(20 * var(--invitation-content-unit)), 20px); line-height: 1.4; }
+            .invitation-heading p { font-size: clamp(10px, calc(12 * var(--invitation-content-unit)), 12px); line-height: 1.6; margin-top: 2px; }
+            .invitation-ornament { margin-block: calc(4 * var(--invitation-content-unit)); }
+            .invitation-ornament svg { width: min(52cqw, 184px); height: calc(22 * var(--invitation-content-unit)); }
+            .invitation-honor { font-size: clamp(7px, calc(8 * var(--invitation-content-unit)), 8px); line-height: 1.5; letter-spacing: .16em; }
+            .exhibitor-logo-wrapper { margin-top: calc(6 * var(--invitation-content-unit)); margin-bottom: 3px; }
             .exhibitor-logo-frame {
-                width: clamp(96px, 17svh, 136px);
-                height: clamp(96px, 17svh, 136px);
+                width: min(60cqw, calc(200 * var(--invitation-content-unit)));
                 padding: 4px;
                 border-radius: 12px;
             }
-            .exhibitor-name { font-size: 15px; line-height: 1.3; margin-top: 3px; letter-spacing: .04em; overflow-wrap: anywhere; }
+            .exhibitor-name { font-size: clamp(13px, calc(15 * var(--invitation-content-unit)), 15px); line-height: 1.3; margin-top: 3px; letter-spacing: .04em; overflow-wrap: anywhere; }
             .exhibitor-tier { margin-top: 4px; padding: 1px 10px; }
             .exhibitor-tier span { font-size: 8px; line-height: 1.5; letter-spacing: .14em; }
-            .invitation-qr { margin-top: 8px; }
+            .invitation-qr { margin-top: calc(8 * var(--invitation-content-unit)); }
             .invitation-qr-frame { padding: 6px; border-radius: 12px; }
             .invitation-qr-frame > img,
-            .invitation-qr-frame > svg { width: clamp(76px, 11svh, 92px); height: clamp(76px, 11svh, 92px); }
-            .invitation-brand-logo { height: 30px; max-width: 160px; }
+            .invitation-qr-frame > svg { width: clamp(68px, calc(90 * var(--invitation-content-unit)), 90px); height: auto; aspect-ratio: 1; }
+            .invitation-brand-logo { height: calc(36 * var(--invitation-content-unit)); max-width: min(54cqw, 180px); }
             .invitation-edition { font-size: 7px; line-height: 1.5; }
             .invitation-schedule { margin-top: 6px; padding-top: 5px; gap: 3px 6px; font-size: 7px; line-height: 1.5; letter-spacing: .02em; }
             .invitation-download { margin-block: 10px; }
@@ -340,14 +352,6 @@
             .invitation-door-seal img { max-height: 44px; }
             .invitation-door-details { font-size: 9px; line-height: 1.5; gap: 3px; }
             .invitation-door-open { min-height: 44px; padding: 10px 18px; }
-        }
-        @media screen and (max-width: 639px) and (max-height: 740px) {
-            .rounded-card-frame .parchment-paper { padding-top: 32px; padding-bottom: 8px; }
-            .invitation-heading h2 { font-size: 18px; }
-            .invitation-heading p { font-size: 11px; }
-            .invitation-ornament { margin-block: 2px; }
-            .invitation-ornament svg { height: 18px; }
-            .invitation-brand-logo { height: 25px; }
         }
         @media (prefers-reduced-motion: reduce) {
             .invitation-door-leaf, .invitation-door-content { transition: none; }
@@ -431,9 +435,9 @@
                         <g class="door-upper-shape">
                             <g clip-path="url(#door-upper-clip-left)">
                                 <rect width="100%" height="100%" fill="var(--invitation-blue)"/>
-                                <image class="door-upper-artwork" href="{{ asset('images/door-art-deco-upper.svg') }}" preserveAspectRatio="xMidYMid slice"/>
+                                <image class="door-upper-artwork" href="{{ asset('images/door-art-deco-upper-v2.svg') }}" preserveAspectRatio="xMidYMid slice"/>
                             </g>
-                            <path class="door-upper-curve" fill="none" stroke="#536079" stroke-width="1"/>
+                            <path class="door-upper-curve" fill="none" stroke="#8d7958" stroke-width="1"/>
                         </g>
                     </svg>
                     <span class="door-panel door-panel--lower"></span>
@@ -448,9 +452,9 @@
                         <g class="door-upper-shape">
                             <g clip-path="url(#door-upper-clip-right)">
                                 <rect width="100%" height="100%" fill="var(--invitation-blue)"/>
-                                <image class="door-upper-artwork" href="{{ asset('images/door-art-deco-upper.svg') }}" preserveAspectRatio="xMidYMid slice"/>
+                                <image class="door-upper-artwork" href="{{ asset('images/door-art-deco-upper-v2.svg') }}" preserveAspectRatio="xMidYMid slice"/>
                             </g>
-                            <path class="door-upper-curve" fill="none" stroke="#536079" stroke-width="1"/>
+                            <path class="door-upper-curve" fill="none" stroke="#8d7958" stroke-width="1"/>
                         </g>
                     </svg>
                     <span class="door-panel door-panel--lower"></span>

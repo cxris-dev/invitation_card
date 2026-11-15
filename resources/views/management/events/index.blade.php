@@ -5,12 +5,42 @@
 @push('styles')
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/earlyaccess/tharlon.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Montserrat:wght@400;500;600;700&family=Noto+Serif+Myanmar:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
+    @include('management.customers.partials.invitation-palette')
+    .rounded-card-preview {
+        --preview-frame-inset: 10px;
+        border-radius: 9999px 9999px 20px 20px;
+        box-shadow: 0 0 0 1px var(--invitation-gold);
+    }
+    .rounded-card-frame {
+        border-radius: 9999px 9999px 20px 20px;
+        padding: var(--preview-frame-inset);
+        background: var(--invitation-blue);
+        box-shadow: inset 3px 0 3px var(--invitation-blue-highlight), inset -4px -3px 5px var(--invitation-blue-shadow);
+    }
+    .rounded-card-frame-inner {
+        padding: 0;
+        border-radius: 9999px 9999px 10px 10px;
+        box-shadow: 0 0 0 1px #536079;
+    }
+    .rounded-card-frame .parchment-paper { border-radius: inherit; padding-top: 32px; }
     .font-cinzel { font-family: 'Cinzel', serif; }
     .font-cormorant { font-family: 'Cormorant Garamond', Georgia, serif; }
     .font-montserrat { font-family: 'Montserrat', sans-serif; }
-    .font-burmese { font-family: 'Noto Serif Myanmar', 'Myanmar Text', 'Padauk', sans-serif; }
+    .font-burmese { font-family: 'Tharlon', 'Noto Serif Myanmar', 'Myanmar Text', 'Padauk', sans-serif; }
+    .parchment-paper {
+        background-color: var(--invitation-paper);
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.12'/%3E%3C/svg%3E"),
+            radial-gradient(ellipse at 50% 12%, rgba(255,244,217,.4), transparent 58%),
+            linear-gradient(180deg, var(--invitation-paper-light) 0%, var(--invitation-paper) 60%, var(--invitation-paper-shadow) 100%);
+        background-size: 180px 180px, auto, auto;
+        background-blend-mode: soft-light, normal, normal;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.78), inset 0 0 5px rgba(121,91,54,.2), inset 0 10px 20px rgba(15,23,42,.25), inset 0 -3px 7px rgba(155,109,51,.14);
+    }
+    .paper-pressed-ink { text-shadow: 0 1px 0 rgba(255,255,255,.78), 0 -1px 1px rgba(120,88,47,.28), 0 1px 2px rgba(14,30,74,.14); }
 </style>
 @endpush
 
@@ -161,12 +191,6 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider">Card Footer Note</label>
-                        <input type="text" name="footer_text" value="{{ old('footer_text', $event->footer_text) }}" placeholder="e.g. Timeless Asia • 4th Edition 2027" class="mt-1 w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 focus:border-[#465fff] focus:ring-1 focus:ring-[#465fff]">
-                        @error('footer_text') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
-                    </div>
-
                     {{-- Image & QR Code Uploads --}}
                     <div class="pt-3 border-t border-gray-100 space-y-4">
                         {{-- Event Logo --}}
@@ -264,59 +288,45 @@
                     @endif
                 </div>
 
-                {{-- Mini Render of Card (100% Pure Code: HTML, CSS & SVG) --}}
-                <div class="relative w-full rounded-2xl bg-[#061536] p-2.5 sm:p-3 shadow-xl border border-blue-900/60 overflow-hidden text-center select-none">
-                    {{-- Myanmar Royal Kanote Background Pattern --}}
-                    <div class="pointer-events-none absolute inset-0 opacity-[0.24] overflow-hidden">
-                        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <pattern id="myanmar-royal-kanote-mini" width="70" height="70" patternUnits="userSpaceOnUse">
-                                    <g stroke="#93c5fd" fill="#3b82f6" fill-opacity="0.2" stroke-width="0.8" stroke-linecap="round">
-                                        <circle cx="35" cy="35" r="5" fill="#60a5fa" stroke="#bfdbfe" stroke-width="0.8"/>
-                                        <circle cx="35" cy="35" r="2" fill="#dbeafe"/>
-                                        <path d="M35 30 C33 27, 33 24, 35 22 C37 24, 37 27, 35 30 Z"/>
-                                        <path d="M35 40 C33 43, 33 46, 35 48 C37 46, 37 43, 35 40 Z"/>
-                                        <path d="M30 35 C27 33, 24 33, 22 35 C24 37, 27 37, 30 35 Z"/>
-                                        <path d="M40 35 C43 33, 46 33, 48 35 C46 37, 43 37, 40 35 Z"/>
-                                        <path d="M38 32 C43 28, 47 26, 50 20 C54 14, 52 8, 48 8 C45 8, 43 12, 46 14 C44 16, 40 18, 36 24 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                        <path d="M32 32 C27 28, 23 26, 20 20 C16 14, 18 8, 22 8 C25 8, 27 12, 24 14 C26 16, 30 18, 34 24 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                        <path d="M38 38 C43 42, 47 44, 50 50 C54 56, 52 62, 48 62 C45 62, 43 58, 46 56 C44 54, 40 52, 36 46 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                        <path d="M32 38 C27 42, 23 44, 20 50 C16 56, 18 62, 22 62 C25 62, 27 58, 24 56 C26 54, 30 52, 34 46 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                        <circle cx="0" cy="0" r="4" fill="#60a5fa" stroke="#bfdbfe" stroke-width="0.8"/>
-                                        <circle cx="70" cy="0" r="4" fill="#60a5fa" stroke="#bfdbfe" stroke-width="0.8"/>
-                                        <circle cx="0" cy="70" r="4" fill="#60a5fa" stroke="#bfdbfe" stroke-width="0.8"/>
-                                        <circle cx="70" cy="70" r="4" fill="#60a5fa" stroke="#bfdbfe" stroke-width="0.8"/>
-                                    </g>
-                                </pattern>
-                            </defs>
-                            <rect width="100%" height="100%" fill="url(#myanmar-royal-kanote-mini)" />
-                        </svg>
-                    </div>
+                {{-- Mini Render of Card --}}
+                <div class="rounded-card-preview relative w-full bg-transparent p-0 border-0 overflow-hidden text-center select-none">
 
-                    {{-- 3D Molded Roman Cathedral Arch Frame --}}
-                    <div class="relative w-full rounded-t-[9999px] rounded-b-xl p-1.5 bg-gradient-to-b from-[#193a7d] via-[#0d2254] to-[#07163c] shadow-[inset_0_2px_4px_rgba(255,255,255,0.3),inset_0_-2px_6px_rgba(0,0,0,0.8),0_6px_16px_rgba(0,0,0,0.5)] border border-blue-400/30">
-                        {{-- Inner Arch Molding Layer --}}
-                        <div class="relative w-full rounded-t-[9999px] rounded-b-lg p-0.5 bg-gradient-to-b from-[#091b42] to-[#122c66] shadow-[inset_0_3px_6px_rgba(0,0,0,0.7)] border border-blue-300/20">
+                    {{-- Solid sapphire arch frame --}}
+                    <div class="rounded-card-frame relative w-full">
+                        {{-- Inner arch spacing --}}
+                        <div class="rounded-card-frame-inner relative w-full">
                             {{-- Champagne Parchment Canvas --}}
-                            <div class="relative w-full rounded-t-[9999px] rounded-b-md px-3 pt-5 pb-3.5 flex flex-col items-center text-center overflow-hidden shadow-[inset_0_10px_20px_rgba(15,23,42,0.35)]" style="background: linear-gradient(180deg, #f8eedf 0%, #faf1e5 20%, #f6e8d2 60%, #eedac1 100%);">
+                            <div class="parchment-paper relative w-full rounded-t-[9999px] rounded-b-md px-3 pt-5 pb-3.5 flex flex-col items-center text-center overflow-hidden">
                                 
                                 {{-- 1. Burmese Calligraphic Header --}}
                                 <div class="flex flex-col items-center">
-                                    <h4 class="font-burmese text-sm sm:text-base font-bold text-[#0e1e4a] leading-tight" style="text-shadow: 0 1px 0 rgba(255,255,255,0.7);">
+                                    <h4 class="font-burmese paper-pressed-ink text-sm sm:text-base font-normal text-[#0e1e4a] leading-tight">
                                         ကျောက်မျက်ရတနာ
                                     </h4>
-                                    <p class="font-burmese text-[10px] sm:text-[11px] font-semibold text-[#0e1e4a]/90 mt-0.5">
+                                    <p class="font-burmese paper-pressed-ink text-[10px] sm:text-[11px] font-normal text-[#0e1e4a]/90 mt-0.5">
                                         အလှတရားတွေနဲ့အတူရှိနေမဲ့
                                     </p>
                                 </div>
 
                                 {{-- 2. Upper Filigree Scrollwork Divider --}}
                                 <div class="my-1.5 flex items-center justify-center w-full">
-                                    <svg class="w-32 h-3.5 text-[#c9ad84]" viewBox="0 0 240 20" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95));">
-                                        <path d="M15 10 C35 3, 55 17, 75 10 C95 3, 105 10, 115 10 C120 10, 120 10, 125 10 C135 10, 145 3, 165 10 C185 17, 205 3, 225 10" stroke-width="1.3" stroke-linecap="round"/>
-                                        <circle cx="120" cy="10" r="2.5" fill="currentColor"/>
-                                        <circle cx="108" cy="10" r="1.5" fill="currentColor"/>
-                                        <circle cx="132" cy="10" r="1.5" fill="currentColor"/>
+                                    <svg class="w-32 h-5 text-[#c9ad84]" viewBox="0 0 300 42" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95));">
+                                        <g stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                            <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                            <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                            <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                            <g transform="translate(300 0) scale(-1 1)">
+                                                <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                                <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                                <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                                <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                            </g>
+                                            <path d="M150 7 C141 13 141 20 150 24 C159 20 159 13 150 7Z" fill="currentColor" fill-opacity=".2"/>
+                                            <path d="M150 35 C141 29 141 22 150 18 C159 22 159 29 150 35Z" fill="currentColor" fill-opacity=".2"/>
+                                            <path d="M136 21 C142 15 146 15 150 18 C154 15 158 15 164 21 C158 27 154 27 150 24 C146 27 142 27 136 21Z" fill="currentColor" fill-opacity=".14"/>
+                                            <circle cx="150" cy="21" r="3.2" fill="currentColor"/>
+                                        </g>
                                     </svg>
                                 </div>
 
@@ -361,26 +371,30 @@
                                 </div>
 
                                 {{-- 4. Lower Filigree Scrollwork Divider --}}
-                                <div class="my-1.5 flex items-center justify-center w-full">
-                                    <svg class="w-32 h-3.5 text-[#c9ad84]" viewBox="0 0 240 20" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95));">
-                                        <path d="M15 10 C35 3, 55 17, 75 10 C95 3, 105 10, 115 10 C120 10, 120 10, 125 10 C135 10, 145 3, 165 10 C185 17, 205 3, 225 10" stroke-width="1.3" stroke-linecap="round"/>
-                                        <circle cx="120" cy="10" r="2.5" fill="currentColor"/>
-                                        <circle cx="108" cy="10" r="1.5" fill="currentColor"/>
-                                        <circle cx="132" cy="10" r="1.5" fill="currentColor"/>
+                                <div class="flex items-center justify-center w-full" style="margin: 2px 0 0;">
+                                    <svg class="w-32 h-5 text-[#c9ad84]" viewBox="0 0 300 42" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95));">
+                                        <g stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                            <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                            <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                            <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                            <g transform="translate(300 0) scale(-1 1)">
+                                                <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                                <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                                <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                                <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                            </g>
+                                            <path d="M150 7 C141 13 141 20 150 24 C159 20 159 13 150 7Z" fill="currentColor" fill-opacity=".2"/>
+                                            <path d="M150 35 C141 29 141 22 150 18 C159 22 159 29 150 35Z" fill="currentColor" fill-opacity=".2"/>
+                                            <path d="M136 21 C142 15 146 15 150 18 C154 15 158 15 164 21 C158 27 154 27 150 24 C146 27 142 27 136 21Z" fill="currentColor" fill-opacity=".14"/>
+                                            <circle cx="150" cy="21" r="3.2" fill="currentColor"/>
+                                        </g>
                                     </svg>
                                 </div>
 
                                 {{-- 5. Lower Section: Official Timeless Asia Typography & Event Metadata --}}
                                 <div class="relative w-full flex flex-col items-center">
-                                    {{-- Wireframe Diamond SVG Accent --}}
-                                    <svg class="absolute right-0 -top-2 w-10 h-10 opacity-30 pointer-events-none text-[#b89b70]" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <polygon points="50,15 75,32 50,85 25,32" />
-                                        <line x1="25" y1="32" x2="75" y2="32" />
-                                        <line x1="50" y1="15" x2="38" y2="32" />
-                                        <line x1="50" y1="15" x2="62" y2="32" />
-                                        <line x1="38" y1="32" x2="50" y2="85" />
-                                        <line x1="62" y1="32" x2="50" y2="85" />
-                                    </svg>
+
 
                                     <div class="flex flex-col items-center justify-center">
                                         <img src="{{ asset('images/timeless-asia-logo.png') }}" alt="{{ $event->title }}" class="h-6 sm:h-7 w-auto max-w-[130px] object-contain">

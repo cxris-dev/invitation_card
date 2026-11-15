@@ -53,7 +53,6 @@ class EventDetailController extends Controller
         $event->contact_phone = $validated['contact_phone'] ?? null;
         $event->contact_email = $validated['contact_email'] ?? null;
         $event->footer_text = $validated['footer_text'] ?? 'Timeless Asia • 4th Edition 2027';
-
         if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('events/logos', 'public');
             $event->logo_path = $path;

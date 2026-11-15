@@ -10,6 +10,7 @@
     <!-- Google Fonts for Luxury Gems & Jewelry Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/earlyaccess/tharlon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Noto+Serif+Myanmar:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -20,10 +21,56 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        @include('management.customers.partials.invitation-palette')
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cormorant { font-family: 'Cormorant Garamond', Georgia, serif; }
         .font-montserrat { font-family: 'Montserrat', sans-serif; }
-        .font-burmese { font-family: 'Noto Serif Myanmar', 'Myanmar Text', 'Padauk', sans-serif; }
+        .font-burmese { font-family: 'Tharlon', 'Noto Serif Myanmar', 'Myanmar Text', 'Padauk', sans-serif; }
+        .invitation-page-body {
+            background-color: var(--invitation-blue);
+            background-image: url("{{ asset('images/invitation-art-deco-background-v1.png') }}");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .invitation-page-body { background-attachment: fixed; }
+        .invitation-card:focus { outline: none; }
+        .invitation-card {
+            border-radius: 50% 50% var(--invitation-frame-corner) var(--invitation-frame-corner) / 50cqw 50cqw var(--invitation-frame-corner) var(--invitation-frame-corner);
+            box-shadow: 0 0 0 1px var(--invitation-frame-gold);
+        }
+        .rounded-card-frame {
+            border-radius: inherit;
+            padding: var(--invitation-frame-inset);
+            background: var(--invitation-frame-color);
+            box-shadow: inset 3px 0 3px var(--invitation-blue-highlight), inset -4px -3px 5px var(--invitation-blue-shadow);
+        }
+        .rounded-card-frame-inner {
+            padding: 0;
+            border-radius: 9999px 9999px calc(var(--invitation-frame-corner) - var(--invitation-frame-inset)) calc(var(--invitation-frame-corner) - var(--invitation-frame-inset));
+            box-shadow: 0 0 0 1px #536079;
+        }
+        .rounded-card-frame .parchment-paper {
+            border-radius: inherit;
+            padding-top: clamp(44px, 12cqw, 60px);
+        }
+        .exhibitor-logo-frame { width: 160px; height: 160px; }
+        @media (min-width: 640px) {
+            .exhibitor-logo-frame { width: 176px; height: 176px; }
+        }
+        .parchment-paper {
+            background-color: var(--invitation-paper);
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.12'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at 50% 12%, rgba(255,244,217,.4), transparent 58%),
+                linear-gradient(180deg, var(--invitation-paper-light) 0%, var(--invitation-paper) 60%, var(--invitation-paper-shadow) 100%);
+            background-size: 180px 180px, auto, auto;
+            background-blend-mode: soft-light, normal, normal;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.78), inset 0 0 5px rgba(121,91,54,.2), inset 0 15px 30px rgba(15,23,42,.28), inset 0 -3px 7px rgba(155,109,51,.14);
+        }
+        .paper-pressed-ink {
+            text-shadow: 0 1px 0 rgba(255,255,255,.78), 0 -1px 1px rgba(120,88,47,.28), 0 1px 2px rgba(14,30,74,.14);
+        }
 
         /* Metallic gold gradient text */
         .text-gold-gradient {
@@ -36,175 +83,280 @@
             box-shadow: 0 0 50px -10px rgba(245, 158, 11, 0.28), 0 0 80px -20px rgba(37, 99, 235, 0.35);
         }
 
-        /* Code-drawn floral cover inspired by the supplied motion invitation. */
-        .invitation-intro {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
+        /* Hinged sapphire doors with fine Art Deco inlay and brass hardware. */
+        .print-card-wrapper {
+            --invitation-frame-color: var(--invitation-blue);
+            --invitation-frame-gold: var(--invitation-gold);
+            --invitation-frame-inset: 17px;
+            --invitation-frame-corner: 28px;
+            position: relative;
             display: grid;
-            place-items: center;
-            overflow: hidden;
-            background: #f8f5ed;
-            color: #0e1e4a;
-            opacity: 0;
+            justify-items: center;
+            width: 100%;
+            max-width: 480px;
+            container-type: inline-size;
+        }
+        .print-card-wrapper > .invitation-card {
+            grid-area: 1 / 1;
+            width: 100%;
+            max-width: none;
+        }
+        @media (min-width: 640px) {
+            .print-card-wrapper { max-width: 500px; }
+        }
+        .invitation-page-body { overflow-x: hidden; }
+        .invitation-intro {
+            position: relative;
+            grid-area: 1 / 1;
+            align-self: stretch;
+            z-index: 30;
+            width: 100%;
+            min-height: 0;
+            perspective: 1600px;
             visibility: hidden;
             pointer-events: none;
         }
-        html.invitation-intro-active .invitation-intro {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
+        html.invitation-intro-active .invitation-intro { visibility: visible; pointer-events: auto; }
+        html.invitation-intro-active .invitation-card,
+        html.invitation-intro-active .no-print { visibility: hidden; }
+        html.invitation-intro-opening .invitation-card { visibility: visible; }
+        .invitation-door-frame {
+            position: absolute;
+            inset: 0;
+            border: 0;
+            border-radius: 50% 50% 28px 28px / 50cqw 50cqw 28px 28px;
+            box-shadow: 0 0 0 1px var(--invitation-frame-gold);
+            perspective: 1600px;
+            background: transparent;
         }
-        html.invitation-intro-active .print-card-wrapper,
-        html.invitation-intro-active .no-print {
-            visibility: hidden;
-        }
-        html.invitation-intro-active,
-        html.invitation-intro-opening {
-            overflow: hidden;
-        }
-        .intro-panel {
+        .invitation-door-leaf {
+            --door-panel-inset: var(--invitation-frame-inset);
             position: absolute;
             inset-block: 0;
-            width: 50.1%;
-            background: linear-gradient(145deg, #fffdf8 0%, #f5f0e5 100%);
-            transition: transform 1.35s cubic-bezier(.77, 0, .18, 1);
+            width: 50%;
+            overflow: hidden;
+            background: var(--invitation-frame-color);
+            border: 0;
+            box-shadow: inset 3px 0 3px var(--invitation-blue-highlight), inset -4px -3px 5px var(--invitation-blue-shadow);
+            backface-visibility: hidden;
+            transition: transform 1.65s cubic-bezier(.65,.05,.25,1), opacity .35s 1.3s;
             will-change: transform;
         }
-        .intro-panel--left {
-            inset-inline-start: 0;
-            border-inline-end: 1px solid rgba(180, 130, 34, .35);
+        .invitation-door-leaf--left { left: 0; border-radius: 100% 0 0 28px / 50cqw 0 0 28px; transform-origin: left center; }
+        .invitation-door-leaf--right { right: 0; border-radius: 0 100% 28px 0 / 0 50cqw 28px 0; transform-origin: right center; }
+        .door-panel {
+            position: absolute;
+            inset-inline: var(--door-panel-inset);
+            overflow: hidden;
+            border: 1px solid #536079;
+            background: var(--invitation-blue);
+            box-shadow: inset 0 3px 9px #010712, 0 1px 0 #304360;
         }
-        .intro-panel--right {
-            inset-inline-end: 0;
-            border-inline-start: 1px solid rgba(180, 130, 34, .35);
-        }
-        .intro-florals {
+        .door-panel::before {
+            content: "";
             position: absolute;
             inset: 0;
-            width: 100%;
-            height: 100%;
+            background: url("{{ asset('images/door-art-deco-lower.svg') }}") center / cover no-repeat;
             pointer-events: none;
-            transition: opacity .55s ease .25s;
         }
-        .intro-cover-content {
-            position: relative;
+        .invitation-door-leaf--right .door-panel::before { transform: scaleX(-1); }
+        .door-upper-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(66.5% - 8px);
+            overflow: visible;
+        }
+        .door-panel--lower { top: calc(66.5% + 8px); bottom: var(--door-panel-inset); }
+        .invitation-door-leaf--left .door-panel--lower { border-radius: 3px 3px 3px calc(28px - var(--door-panel-inset)); }
+        .invitation-door-leaf--right .door-panel--lower { border-radius: 3px 3px calc(28px - var(--door-panel-inset)) 3px; }
+        .door-divider {
+            position: absolute;
+            top: 66.5%;
+            inset-inline: 24px;
+            height: 1px;
+            background: var(--invitation-gold);
+        }
+        .door-divider::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 16px;
+            height: 6px;
+            border: 1px solid var(--invitation-gold);
+            border-radius: 50%;
+            background: var(--invitation-blue);
+            transform: translate(-50%, -50%);
+        }
+        .door-hinge {
+            position: absolute;
             z-index: 2;
+            width: 8px;
+            height: 37px;
+            background: #aa8e5c;
+            border: 1px solid #cfb78b;
+            border-radius: 3px;
+            box-shadow: inset -3px 0 #79633e, 1px 2px 3px #020914;
+        }
+        .door-hinge--top { top: 31%; }
+        .door-hinge--bottom { bottom: 13%; }
+        .invitation-door-leaf--left .door-hinge { left: 2px; }
+        .invitation-door-leaf--right .door-hinge { right: 2px; }
+        .invitation-door-handle {
+            position: absolute;
+            z-index: 3;
+            top: 55%;
+            width: 29px;
+            height: 54px;
+            border: 1px solid #b49a6b;
+            border-radius: 15px 15px 8px 8px;
+            background: #96794b;
+            box-shadow: inset 2px 1px 0 #d8c095, 2px 3px 6px #010813;
+        }
+        .invitation-door-handle::before {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 9px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e1cba4;
+            box-shadow: 0 1px 2px #30200b;
+        }
+        .invitation-door-handle::after {
+            content: "";
+            position: absolute;
+            top: 13px;
+            left: 1px;
+            width: 25px;
+            height: 31px;
+            border: 4px solid #c5ab7e;
+            border-radius: 50%;
+            box-sizing: border-box;
+            box-shadow: inset 1px 1px #ead6ae, 1px 3px 2px #020814;
+        }
+        .invitation-door-leaf--left .invitation-door-handle { right: 18px; }
+        .invitation-door-leaf--right .invitation-door-handle { left: 18px; }
+        .invitation-door-content {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding-top: 33%;
             text-align: center;
-            padding: 1.5rem;
-            animation: intro-content-arrive .9s .2s both;
+            pointer-events: none;
+            transition: opacity .3s ease;
         }
-        .intro-seal {
+        .invitation-door-seal {
             display: grid;
             place-items: center;
-            width: clamp(112px, 24vw, 154px);
-            aspect-ratio: 1;
-            padding: .75rem;
-            border: 1px solid #d7ba73;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 25%, #31559a, #0a1b48 72%);
-            box-shadow: 0 0 0 7px rgba(255,255,255,.72), 0 0 0 8px rgba(180,130,34,.44), 0 14px 40px rgba(14,30,74,.2);
-            transition: transform .8s ease, opacity .65s ease;
+            width: 68%;
+            gap: 12px;
+            padding: 18px 14px;
+            border: 1px solid var(--invitation-gold);
+            border-radius: 5px;
+            background: var(--invitation-paper-light);
+            box-shadow: 0 4px 12px #020a18;
         }
-        .intro-seal img {
-            width: 78%;
-            height: 78%;
-            object-fit: contain;
-            filter: brightness(0) invert(1);
+        .invitation-door-seal img { width: 100%; height: auto; max-height: 60px; object-fit: contain; }
+        .invitation-door-details {
+            display: grid;
+            gap: 4px;
+            color: var(--invitation-ink);
+            font: 500 clamp(.55rem, 1.8vw, .7rem)/1.5 'Montserrat', sans-serif;
+            letter-spacing: .03em;
+            overflow-wrap: anywhere;
         }
-        .intro-title {
-            margin-top: 1.75rem;
-            color: #0e1e4a;
-            font-family: 'Cinzel', Georgia, serif;
-            font-size: clamp(1rem, 3.5vw, 1.35rem);
-            font-weight: 600;
-            letter-spacing: .22em;
-            text-transform: uppercase;
-        }
-        .intro-subtitle {
-            margin-top: .45rem;
-            color: #80662e;
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.15rem;
-            font-style: italic;
-            letter-spacing: .08em;
-        }
-        .intro-open-button {
-            margin-top: 1.65rem;
-            border: 1px solid rgba(180,130,34,.72);
-            border-radius: 999px;
-            padding: .7rem 1.35rem;
-            background: rgba(255,255,255,.72);
-            color: #0e1e4a;
-            font-family: 'Cinzel', Georgia, serif;
-            font-size: .7rem;
-            font-weight: 700;
-            letter-spacing: .18em;
-            text-transform: uppercase;
-            box-shadow: 0 5px 18px rgba(14,30,74,.08);
-            transition: background .2s ease, transform .2s ease;
-            cursor: pointer;
-        }
-        .intro-open-button:hover {
-            transform: translateY(-2px);
-            background: #fff;
-        }
-        .intro-skip {
+        .invitation-door-details p { margin: 0; }
+        .invitation-door-date { font-weight: 700; }
+        .invitation-door-open {
             position: absolute;
-            z-index: 3;
-            inset-inline-end: max(1.1rem, env(safe-area-inset-right));
-            inset-block-end: max(1rem, env(safe-area-inset-bottom));
-            border: 0;
-            padding: .65rem .8rem;
-            background: transparent;
-            color: rgba(14,30,74,.72);
-            font: 600 .68rem 'Montserrat', sans-serif;
-            letter-spacing: .12em;
-            text-transform: uppercase;
+            bottom: 10%;
+            padding: 13px 25px;
+            border: 1px solid var(--invitation-gold);
+            border-radius: 5px;
+            background: var(--invitation-gold-light);
+            color: var(--invitation-ink);
+            font: 700 .65rem 'Cinzel', Georgia, serif;
+            letter-spacing: .15em;
             cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 4px 12px #020812;
+            transition: background .2s, transform .2s;
         }
-        .intro-skip:focus-visible,
-        .intro-open-button:focus-visible {
-            outline: 3px solid #b48222;
-            outline-offset: 4px;
+        .invitation-door-open:hover { background: var(--invitation-paper-light); transform: translateY(-2px); }
+        #downloadBtn {
+            background: var(--invitation-gold-light);
+            color: var(--invitation-ink);
+            border-color: var(--invitation-gold);
+            box-shadow: 0 4px 18px rgba(12, 23, 60, .3);
         }
-        html.invitation-intro-opening .intro-panel--left {
-            transform: translateX(-101%);
+        #downloadBtn svg { color: inherit; }
+        .invitation-door-open:focus-visible { outline: 3px solid #fff1b9; outline-offset: 4px; }
+        html.invitation-intro-opening .invitation-door-leaf--left { transform: rotateY(-102deg); opacity: 0; }
+        html.invitation-intro-opening .invitation-door-leaf--right { transform: rotateY(102deg); opacity: 0; }
+        html.invitation-intro-opening .invitation-door-content { opacity: 0; }
+        @media (max-width: 480px) {
+            .print-card-wrapper { --invitation-frame-inset: 12px; }
+            .invitation-door-handle { transform: scale(.85); }
+            .invitation-door-leaf--left .invitation-door-handle { right: 10px; }
+            .invitation-door-leaf--right .invitation-door-handle { left: 10px; }
         }
-        html.invitation-intro-opening .intro-panel--right {
-            transform: translateX(101%);
+        @media screen and (max-width: 639px) {
+            .invitation-page-body { padding: 8px; justify-content: flex-start; }
+            .print-card-wrapper { margin-block: 0; padding-block: 4px; --invitation-frame-inset: 10px; }
+            .rounded-card-frame .parchment-paper { padding: 38px 12px 12px; }
+            .invitation-heading h2 { font-size: 20px; line-height: 1.4; }
+            .invitation-heading p { font-size: 12px; line-height: 1.6; margin-top: 2px; }
+            .invitation-ornament { margin-block: 4px; }
+            .invitation-ornament svg { width: 160px; height: 22px; }
+            .invitation-honor { font-size: 8px; line-height: 1.5; letter-spacing: .16em; }
+            .exhibitor-logo-wrapper { margin-top: 6px; margin-bottom: 3px; }
+            .exhibitor-logo-frame {
+                width: clamp(96px, 17svh, 136px);
+                height: clamp(96px, 17svh, 136px);
+                padding: 4px;
+                border-radius: 12px;
+            }
+            .exhibitor-name { font-size: 15px; line-height: 1.3; margin-top: 3px; letter-spacing: .04em; overflow-wrap: anywhere; }
+            .exhibitor-tier { margin-top: 4px; padding: 1px 10px; }
+            .exhibitor-tier span { font-size: 8px; line-height: 1.5; letter-spacing: .14em; }
+            .invitation-qr { margin-top: 8px; }
+            .invitation-qr-frame { padding: 6px; border-radius: 12px; }
+            .invitation-qr-frame > img,
+            .invitation-qr-frame > svg { width: clamp(76px, 11svh, 92px); height: clamp(76px, 11svh, 92px); }
+            .invitation-brand-logo { height: 30px; max-width: 160px; }
+            .invitation-edition { font-size: 7px; line-height: 1.5; }
+            .invitation-schedule { margin-top: 6px; padding-top: 5px; gap: 3px 6px; font-size: 7px; line-height: 1.5; letter-spacing: .02em; }
+            .invitation-download { margin-block: 10px; }
+            #downloadBtn { padding: 10px 18px; font-size: 10px; min-height: 40px; }
+            .invitation-door-content { padding-top: 29%; }
+            .invitation-door-seal { gap: 8px; padding: 12px 10px; }
+            .invitation-door-seal img { max-height: 44px; }
+            .invitation-door-details { font-size: 9px; line-height: 1.5; gap: 3px; }
+            .invitation-door-open { min-height: 44px; padding: 10px 18px; }
         }
-        html.invitation-intro-opening .intro-seal {
-            transform: scale(.78);
-            opacity: 0;
-        }
-        html.invitation-intro-opening .intro-cover-content {
-            animation: none;
-            opacity: 0;
-            transition: opacity .45s ease;
-        }
-        html.invitation-intro-opening .intro-florals {
-            opacity: 0;
-        }
-        html.invitation-card-revealed .print-card-wrapper {
-            animation: invitation-card-reveal .95s cubic-bezier(.2,.75,.25,1) both;
-        }
-        @keyframes intro-content-arrive {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes invitation-card-reveal {
-            from { opacity: 0; transform: translateY(20px) scale(.975); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @media screen and (max-width: 639px) and (max-height: 740px) {
+            .rounded-card-frame .parchment-paper { padding-top: 32px; padding-bottom: 8px; }
+            .invitation-heading h2 { font-size: 18px; }
+            .invitation-heading p { font-size: 11px; }
+            .invitation-ornament { margin-block: 2px; }
+            .invitation-ornament svg { height: 18px; }
+            .invitation-brand-logo { height: 25px; }
         }
         @media (prefers-reduced-motion: reduce) {
-            .intro-panel, .intro-seal, .intro-cover-content, .print-card-wrapper {
-                animation-duration: .01ms !important;
-                transition-duration: .01ms !important;
-            }
+            .invitation-door-leaf, .invitation-door-content { transition: none; }
+        }
+        @media (max-height: 500px) {
+            .invitation-door-seal { gap: 6px; padding: 10px; }
+            .invitation-door-seal img { max-height: 35px; }
+            .invitation-door-content { padding-top: 25%; }
+            .invitation-door-open { padding: 9px 12px; font-size: .55rem; }
         }
 
         @media print {
@@ -223,6 +375,7 @@
                 display: none !important;
             }
             .print-card-wrapper {
+                height: auto !important;
                 min-height: 100vh !important;
                 padding: 0.5cm !important;
                 display: flex !important;
@@ -231,11 +384,15 @@
                 background: transparent !important;
             }
             .invitation-card {
+                position: relative !important;
                 box-shadow: none !important;
                 page-break-inside: avoid !important;
             }
             .invitation-intro {
                 display: none !important;
+            }
+            html.invitation-intro-active .invitation-card {
+                visibility: visible !important;
             }
             html.invitation-intro-active .print-card-wrapper,
             html.invitation-intro-active .no-print {
@@ -247,7 +404,7 @@
         document.documentElement.classList.add('invitation-intro-active');
     </script>
 </head>
-<body class="min-h-full bg-gradient-to-b from-[#020a1a] via-[#051532] to-[#010610] text-amber-50 flex flex-col justify-center items-center p-3 sm:p-6 lg:p-8 antialiased selection:bg-[#d4a742] selection:text-black">
+<body class="invitation-page-body min-h-full text-amber-50 flex flex-col justify-center items-center p-3 sm:p-6 lg:p-8 antialiased selection:bg-[#d4a742] selection:text-black">
 
     @php
         $event = \App\Models\EventDetail::current();
@@ -264,190 +421,102 @@
         }
     @endphp
 
-    <section id="invitationIntro" class="invitation-intro" role="dialog" aria-modal="true" aria-label="Invitation cover" aria-describedby="introTitle">
-        <div class="intro-panel intro-panel--left" aria-hidden="true"></div>
-        <div class="intro-panel intro-panel--right" aria-hidden="true"></div>
-
-        {{-- Editable vector florals keep the opening cover in the same code-drawn style as the card. --}}
-        <svg class="intro-florals" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <g id="intro-flower">
-                    <path d="M0 0 C-28 -18 -24 -47 0 -52 C24 -47 28 -18 0 0Z" fill="#ba5570"/>
-                    <path d="M0 0 C-27 -8 -47 -32 -32 -49 C-10 -53 4 -27 0 0Z" fill="#d77c86"/>
-                    <path d="M0 0 C27 -8 47 -32 32 -49 C10 -53 -4 -27 0 0Z" fill="#e6a4a0"/>
-                    <circle cy="-17" r="7" fill="#d4a742"/>
-                </g>
-                <g id="intro-blue-flower">
-                    <path d="M0 0 C-23 -10 -28 -35 -10 -43 C4 -38 7 -17 0 0Z" fill="#315b99"/>
-                    <path d="M0 0 C-17 -19 -11 -43 8 -45 C20 -34 12 -14 0 0Z" fill="#5078b4"/>
-                    <path d="M0 0 C4 -26 25 -38 38 -23 C38 -5 17 3 0 0Z" fill="#6b8fc3"/>
-                    <circle cx="3" cy="-12" r="5" fill="#e3bb61"/>
-                </g>
-                <g id="intro-sprig" fill="none" stroke="#68774e" stroke-width="3" stroke-linecap="round">
-                    <path d="M0 0 C40 -95 35 -188 95 -275 C136 -334 154 -397 148 -480"/>
-                    <path d="M30 -87 C-8 -107 -27 -137 -12 -151 C17 -154 35 -123 30 -87Z" fill="#899566" stroke="none"/>
-                    <path d="M52 -139 C91 -155 111 -184 94 -198 C65 -196 48 -167 52 -139Z" fill="#a4a879" stroke="none"/>
-                    <path d="M76 -204 C38 -224 28 -254 49 -265 C77 -255 88 -226 76 -204Z" fill="#778754" stroke="none"/>
-                    <path d="M105 -267 C143 -281 164 -309 148 -325 C120 -322 102 -294 105 -267Z" fill="#9aa575" stroke="none"/>
-                    <path d="M127 -334 C93 -354 87 -385 109 -394 C136 -381 141 -352 127 -334Z" fill="#71824e" stroke="none"/>
-                    <path d="M143 -414 C174 -431 189 -459 171 -472 C146 -465 134 -437 143 -414Z" fill="#9aa575" stroke="none"/>
-                </g>
-            </defs>
-            <g opacity=".93">
-                <use href="#intro-sprig" transform="translate(70 895) scale(1.25)"/>
-                <use href="#intro-sprig" transform="translate(111 888) scale(.88)"/>
-                <use href="#intro-flower" transform="translate(135 675) scale(1.15)"/>
-                <use href="#intro-blue-flower" transform="translate(188 480) scale(.9)"/>
-                <use href="#intro-flower" transform="translate(86 298) scale(.78)"/>
-                <use href="#intro-blue-flower" transform="translate(175 180) scale(.8)"/>
-                <use href="#intro-sprig" transform="translate(1370 895) scale(-1.25 1.25)"/>
-                <use href="#intro-sprig" transform="translate(1329 888) scale(-.88 .88)"/>
-                <use href="#intro-blue-flower" transform="translate(1305 675) scale(1.05)"/>
-                <use href="#intro-flower" transform="translate(1252 480) scale(.92)"/>
-                <use href="#intro-blue-flower" transform="translate(1354 298) scale(.78)"/>
-                <use href="#intro-flower" transform="translate(1265 180) scale(.8)"/>
-            </g>
-            <path d="M48 34 Q720 -4 1392 34 L1392 866 Q720 904 48 866Z" fill="none" stroke="#b48222" stroke-opacity=".42" stroke-width="2"/>
-            <path d="M62 49 Q720 12 1378 49 L1378 851 Q720 888 62 851Z" fill="none" stroke="#b48222" stroke-opacity=".2" stroke-width="1"/>
-        </svg>
-
-        <div class="intro-cover-content">
-            <div class="intro-seal">
-                <img src="{{ asset('images/timeless-asia-logo.png') }}" alt="">
-            </div>
-            <h1 id="introTitle" class="intro-title">{{ $event->title ?: 'Timeless Asia' }}</h1>
-            <p class="intro-subtitle">{{ $event->subtitle ?: 'A special invitation' }}</p>
-            <button id="openInvitationBtn" class="intro-open-button" type="button">Open Invitation</button>
-        </div>
-        <button id="skipIntroBtn" class="intro-skip" type="button">Skip animation</button>
-    </section>
-
     {{-- Main Printable Invitation Card Container --}}
-    <div class="print-card-wrapper w-full flex justify-center items-center my-auto py-4">
-        <article class="invitation-card relative w-full max-w-[480px] sm:max-w-[500px] rounded-3xl bg-[#061536] p-3 sm:p-5 shadow-[0_25px_60px_-15px_rgba(5,21,50,0.8),0_0_50px_rgba(30,64,175,0.25)] border-2 border-blue-900/60 overflow-hidden text-center select-none" tabindex="-1">
-
-            {{-- Pure Vector Myanmar Royal Kanote (မြန်မာ့ မင်းခမ်းမင်းနား ကနုတ်ပန်း) Brocade Background --}}
-            <div class="pointer-events-none absolute inset-0 opacity-[0.24] sm:opacity-[0.28] overflow-hidden">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="myanmar-royal-kanote" width="120" height="120" patternUnits="userSpaceOnUse">
-                            <g stroke="#93c5fd" fill="#3b82f6" fill-opacity="0.18" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                                {{-- Central Lotus Rosette --}}
-                                <circle cx="60" cy="60" r="8" fill="#60a5fa" fill-opacity="0.3" stroke="#bfdbfe" stroke-width="1.2"/>
-                                <circle cx="60" cy="60" r="3.5" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.8"/>
-                                
-                                {{-- Lotus Petals radiating from center --}}
-                                <path d="M60 52 C57 48, 57 44, 60 41 C63 44, 63 48, 60 52 Z"/>
-                                <path d="M60 68 C57 72, 57 76, 60 79 C63 76, 63 72, 60 68 Z"/>
-                                <path d="M52 60 C48 57, 44 57, 41 60 C44 63, 48 63, 52 60 Z"/>
-                                <path d="M68 60 C72 57, 76 57, 79 60 C76 63, 72 63, 68 60 Z"/>
-
-                                {{-- 4 Diagonal Myanmar Royal Kanote Flame Scrolls (ကနုတ်အမြီးလိပ်များ) --}}
-                                {{-- North-East Kanote Scroll --}}
-                                <path d="M66 54 C72 48, 77 46, 83 38 C89 29, 87 20, 81 19 C76 18, 74 23, 77 25 C79 26, 81 24, 80 22 C81 25, 79 28, 76 30 C72 32, 69 38, 64 45 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M78 32 C84 29, 91 22, 92 14 C93 9, 89 7, 85 10 C82 12, 84 16, 87 15 C85 18, 80 20, 75 24" fill="none"/>
-                                <path d="M69 41 C76 40, 83 35, 87 28" fill="none" stroke-width="0.75"/>
-
-                                {{-- North-West Kanote Scroll --}}
-                                <path d="M54 54 C48 48, 43 46, 37 38 C31 29, 33 20, 39 19 C44 18, 46 23, 43 25 C41 26, 39 24, 40 22 C39 25, 41 28, 44 30 C48 32, 51 38, 56 45 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M42 32 C36 29, 29 22, 28 14 C27 9, 31 7, 35 10 C38 12, 36 16, 33 15 C35 18, 40 20, 45 24" fill="none"/>
-                                <path d="M51 41 C44 40, 37 35, 33 28" fill="none" stroke-width="0.75"/>
-
-                                {{-- South-East Kanote Scroll --}}
-                                <path d="M66 66 C72 72, 77 74, 83 82 C89 91, 87 100, 81 101 C76 102, 74 97, 77 95 C79 94, 81 96, 80 98 C81 95, 79 92, 76 90 C72 88, 69 82, 64 75 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M78 88 C84 91, 91 98, 92 106 C93 111, 89 113, 85 110 C82 108, 84 104, 87 105 C85 102, 80 100, 75 96" fill="none"/>
-                                <path d="M69 79 C76 80, 83 85, 87 92" fill="none" stroke-width="0.75"/>
-
-                                {{-- South-West Kanote Scroll --}}
-                                <path d="M54 66 C48 72, 43 74, 37 82 C31 91, 33 100, 39 101 C44 102, 46 97, 43 95 C41 94, 39 96, 40 98 C39 95, 41 92, 44 90 C48 88, 51 82, 56 75 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M42 88 C36 91, 29 98, 28 106 C27 111, 31 113, 35 110 C38 108, 36 104, 33 105 C35 102, 40 100, 45 96" fill="none"/>
-                                <path d="M51 79 C44 80, 37 85, 33 92" fill="none" stroke-width="0.75"/>
-
-                                {{-- 4 Cardinal Kanote Flame Crests (ကနုတ်ထိပ်ဖူး) --}}
-                                {{-- North Crest --}}
-                                <path d="M60 49 C55 41, 51 32, 55 21 C58 13, 60 7, 60 4 C60 7, 62 13, 65 21 C69 32, 65 41, 60 49 Z" fill="#93c5fd" fill-opacity="0.25"/>
-                                <path d="M60 46 C58 35, 58 20, 60 5" fill="none"/>
-                                <path d="M53 31 C46 29, 41 23, 43 17 C45 13, 49 15, 48 18 C46 22, 50 25, 54 27" fill="none"/>
-                                <path d="M67 31 C74 29, 79 23, 77 17 C75 13, 71 15, 72 18 C74 22, 70 25, 66 27" fill="none"/>
-
-                                {{-- South Crest --}}
-                                <path d="M60 71 C55 79, 51 88, 55 99 C58 107, 60 113, 60 116 C60 113, 62 107, 65 99 C69 88, 65 79, 60 71 Z" fill="#93c5fd" fill-opacity="0.25"/>
-                                <path d="M60 74 C58 85, 58 100, 60 115" fill="none"/>
-                                <path d="M53 89 C46 91, 41 97, 43 103 C45 107, 49 105, 48 102 C46 98, 50 95, 54 93" fill="none"/>
-                                <path d="M67 89 C74 91, 79 97, 77 103 C75 107, 71 105, 72 102 C74 98, 70 95, 66 93" fill="none"/>
-
-                                {{-- West Crest --}}
-                                <path d="M49 60 C41 55, 32 51, 21 55 C13 58, 7 60, 4 60 C7 60, 13 62, 21 65 C32 69, 41 65, 49 60 Z" fill="#93c5fd" fill-opacity="0.25"/>
-                                <path d="M46 60 C35 58, 20 58, 5 60" fill="none"/>
-                                <path d="M31 53 C29 46, 23 41, 17 43 C13 45, 15 49, 18 48 C22 46, 25 50, 27 54" fill="none"/>
-                                <path d="M31 67 C29 74, 23 79, 17 77 C13 75, 15 71, 18 72 C22 74, 25 70, 27 66" fill="none"/>
-
-                                {{-- East Crest --}}
-                                <path d="M71 60 C79 55, 88 51, 99 55 C107 58, 113 60, 116 60 C113 60, 107 62, 99 65 C88 69, 79 65, 71 60 Z" fill="#93c5fd" fill-opacity="0.25"/>
-                                <path d="M74 60 C85 58, 100 58, 115 60" fill="none"/>
-                                <path d="M89 53 C91 46, 97 41, 103 43 C107 45, 105 49, 102 48 C98 46, 95 50, 93 54" fill="none"/>
-                                <path d="M89 67 C91 74, 97 79, 103 77 C107 75, 105 71, 102 72 C98 74, 95 70, 93 66" fill="none"/>
-
-                                {{-- Interlocking Kanote Corner Rosettes (Seamless Tile Corners) --}}
-                                <circle cx="0" cy="0" r="7" fill="#60a5fa" fill-opacity="0.3" stroke="#bfdbfe" stroke-width="1.2"/>
-                                <circle cx="120" cy="0" r="7" fill="#60a5fa" fill-opacity="0.3" stroke="#bfdbfe" stroke-width="1.2"/>
-                                <circle cx="0" cy="120" r="7" fill="#60a5fa" fill-opacity="0.3" stroke="#bfdbfe" stroke-width="1.2"/>
-                                <circle cx="120" cy="120" r="7" fill="#60a5fa" fill-opacity="0.3" stroke="#bfdbfe" stroke-width="1.2"/>
-
-                                <circle cx="0" cy="0" r="3" fill="#dbeafe"/>
-                                <circle cx="120" cy="0" r="3" fill="#dbeafe"/>
-                                <circle cx="0" cy="120" r="3" fill="#dbeafe"/>
-                                <circle cx="120" cy="120" r="3" fill="#dbeafe"/>
-
-                                {{-- Corner Inward Flame Tendrils --}}
-                                <path d="M6 6 C12 12, 17 14, 23 22 C29 31, 27 40, 21 41 C16 42, 14 37, 17 35 C19 34, 21 36, 20 38 C21 35, 19 32, 16 30 C12 28, 9 22, 4 15 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M114 6 C108 12, 103 14, 97 22 C91 31, 93 40, 99 41 C104 42, 106 37, 103 35 C101 34, 99 36, 100 38 C99 35, 101 32, 104 30 C108 28, 111 22, 116 15 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M6 114 C12 108, 17 106, 23 98 C29 89, 27 80, 21 79 C16 78, 14 83, 17 85 C19 86, 21 84, 20 82 C21 85, 19 88, 16 90 C12 92, 9 98, 4 105 Z" fill="#60a5fa" fill-opacity="0.25"/>
-                                <path d="M114 114 C108 108, 103 106, 97 98 C91 89, 93 80, 99 79 C104 78, 106 83, 103 85 C101 86, 99 84, 100 82 C99 85, 101 88, 104 90 C108 92, 111 98, 116 105 Z" fill="#60a5fa" fill-opacity="0.25"/>
-
-                                {{-- Interconnecting Flowing Vines (နွယ်ပတ် ကနုတ်ယှက်) --}}
-                                <path d="M60 4 C40 4, 18 16, 14 36 C10 50, 6 56, 0 60" fill="none" stroke-width="1.1"/>
-                                <path d="M60 4 C80 4, 102 16, 106 36 C110 50, 114 56, 120 60" fill="none" stroke-width="1.1"/>
-                                <path d="M60 116 C40 116, 18 104, 14 84 C10 70, 6 64, 0 60" fill="none" stroke-width="1.1"/>
-                                <path d="M60 116 C80 116, 102 104, 106 84 C110 70, 114 64, 120 60" fill="none" stroke-width="1.1"/>
+    <div class="print-card-wrapper my-auto py-4">
+        <section id="invitationIntro" class="invitation-intro" role="dialog" aria-modal="true" aria-label="Invitation doors" aria-describedby="invitationDoorDetails">
+            <div class="invitation-door-frame" aria-hidden="true">
+                <div class="invitation-door-leaf invitation-door-leaf--left">
+                    <svg class="door-upper-panel" data-side="left" xmlns="http://www.w3.org/2000/svg">
+                        <defs><clipPath id="door-upper-clip-left"><path class="door-upper-curve"/></clipPath></defs>
+                        <g class="door-upper-shape">
+                            <g clip-path="url(#door-upper-clip-left)">
+                                <rect width="100%" height="100%" fill="var(--invitation-blue)"/>
+                                <image class="door-upper-artwork" href="{{ asset('images/door-art-deco-upper.svg') }}" preserveAspectRatio="xMidYMid slice"/>
                             </g>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#myanmar-royal-kanote)" />
-                </svg>
+                            <path class="door-upper-curve" fill="none" stroke="#536079" stroke-width="1"/>
+                        </g>
+                    </svg>
+                    <span class="door-panel door-panel--lower"></span>
+                    <span class="door-divider"></span>
+                    <span class="door-hinge door-hinge--top"></span>
+                    <span class="door-hinge door-hinge--bottom"></span>
+                    <span class="invitation-door-handle"></span>
+                </div>
+                <div class="invitation-door-leaf invitation-door-leaf--right">
+                    <svg class="door-upper-panel" data-side="right" xmlns="http://www.w3.org/2000/svg">
+                        <defs><clipPath id="door-upper-clip-right"><path class="door-upper-curve"/></clipPath></defs>
+                        <g class="door-upper-shape">
+                            <g clip-path="url(#door-upper-clip-right)">
+                                <rect width="100%" height="100%" fill="var(--invitation-blue)"/>
+                                <image class="door-upper-artwork" href="{{ asset('images/door-art-deco-upper.svg') }}" preserveAspectRatio="xMidYMid slice"/>
+                            </g>
+                            <path class="door-upper-curve" fill="none" stroke="#536079" stroke-width="1"/>
+                        </g>
+                    </svg>
+                    <span class="door-panel door-panel--lower"></span>
+                    <span class="door-divider"></span>
+                    <span class="door-hinge door-hinge--top"></span>
+                    <span class="door-hinge door-hinge--bottom"></span>
+                    <span class="invitation-door-handle"></span>
+                </div>
             </div>
+            <div class="invitation-door-content">
+                <div class="invitation-door-seal">
+                    <img src="{{ asset('images/timeless-asia-logo.png') }}" alt="Timeless Asia">
+                    <div id="invitationDoorDetails" class="invitation-door-details">
+                        <p class="invitation-door-date">{{ $event->date_display }}</p>
+                        <p>10:00 AM to 7:00 PM</p>
+                        <p>{{ $event->venue }}</p>
+                    </div>
+                </div>
+                <button id="openInvitationBtn" class="invitation-door-open" type="button">Open Invitation</button>
+            </div>
+        </section>
+        <article class="invitation-card relative w-full max-w-[480px] sm:max-w-[500px] rounded-t-[9999px] rounded-b-2xl bg-transparent p-0 border-0 overflow-hidden text-center select-none" tabindex="-1">
 
-            {{-- 3D Molded Roman Cathedral Arch Frame --}}
-            <div class="relative w-full rounded-t-[9999px] rounded-b-2xl p-2 sm:p-2.5 bg-gradient-to-b from-[#193a7d] via-[#0d2254] to-[#07163c] shadow-[inset_0_2px_4px_rgba(255,255,255,0.3),inset_0_-2px_6px_rgba(0,0,0,0.8),0_10px_30px_rgba(0,0,0,0.6)] border border-blue-400/30">
+            {{-- Solid sapphire arch frame --}}
+            <div class="rounded-card-frame relative w-full">
 
-                {{-- Inner Arch Molding Layer for 3D Bevel Depth --}}
-                <div class="relative w-full rounded-t-[9999px] rounded-b-xl p-1 bg-gradient-to-b from-[#091b42] to-[#122c66] shadow-[inset_0_4px_8px_rgba(0,0,0,0.7)] border border-blue-300/20">
+                {{-- Inner arch spacing --}}
+                <div class="rounded-card-frame-inner relative w-full">
 
                     {{-- Warm Champagne Parchment Inner Canvas with Soft Inner Shadow --}}
-                    <div class="relative w-full rounded-t-[9999px] rounded-b-lg px-4 sm:px-6 pt-7 sm:pt-9 pb-5 sm:pb-6 flex flex-col items-center text-center overflow-hidden shadow-[inset_0_15px_30px_rgba(15,23,42,0.4),inset_0_2px_6px_rgba(0,0,0,0.3)]" style="background: linear-gradient(180deg, #f8eedf 0%, #faf1e5 20%, #f6e8d2 60%, #eedac1 100%);">
+                    <div class="parchment-paper relative w-full rounded-t-[9999px] rounded-b-lg px-4 sm:px-6 pt-7 sm:pt-9 pb-5 sm:pb-6 flex flex-col items-center text-center overflow-hidden">
 
                         {{-- Hidden Image for accessibility & test assertion support --}}
                         <img src="{{ $event->logo_url }}" alt="timeless-asia-logo-white.png" class="sr-only">
 
                         {{-- 1. Top Section: Native Burmese Calligraphic Header in Royal Sapphire Ink --}}
-                        <div class="flex flex-col items-center">
-                            <h2 class="font-burmese text-2xl sm:text-[27px] font-bold tracking-wide text-[#0e1e4a] leading-tight" style="text-shadow: 0 1px 0 rgba(255,255,255,0.8);">
+                        <div class="invitation-heading flex flex-col items-center">
+                            <h2 class="font-burmese paper-pressed-ink text-2xl sm:text-[27px] font-normal tracking-wide text-[#0e1e4a] leading-tight">
                                 ကျောက်မျက်ရတနာ
                             </h2>
-                            <p class="font-burmese text-sm sm:text-base font-semibold text-[#0e1e4a]/90 mt-1 tracking-normal" style="text-shadow: 0 1px 0 rgba(255,255,255,0.8);">
+                            <p class="font-burmese paper-pressed-ink text-sm sm:text-base font-normal text-[#0e1e4a]/90 mt-1 tracking-normal">
                                 အလှတရားတွေနဲ့အတူရှိနေမဲ့
                             </p>
                         </div>
 
                         {{-- 2. Upper Embossed Filigree Scrollwork Divider --}}
-                        <div class="my-2.5 sm:my-3.5 flex items-center justify-center w-full">
-                            <svg class="w-48 sm:w-56 h-5 text-[#c9ad84]" viewBox="0 0 240 20" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95)) drop-shadow(0 -0.5px 0 rgba(140,100,50,0.4));">
-                                <path d="M15 10 C35 3, 55 17, 75 10 C95 3, 105 10, 115 10 C120 10, 120 10, 125 10 C135 10, 145 3, 165 10 C185 17, 205 3, 225 10" stroke-width="1.3" stroke-linecap="round"/>
-                                <path d="M75 10 C68 4, 58 6, 54 11 C50 16, 58 18, 63 15 C68 12, 72 12, 75 10 Z" stroke-width="1" fill="currentColor" fill-opacity="0.18"/>
-                                <path d="M165 10 C172 4, 182 6, 186 11 C190 16, 182 18, 177 15 C172 12, 168 12, 165 10 Z" stroke-width="1" fill="currentColor" fill-opacity="0.18"/>
-                                <circle cx="120" cy="10" r="2.5" fill="currentColor"/>
-                                <circle cx="108" cy="10" r="1.5" fill="currentColor"/>
-                                <circle cx="132" cy="10" r="1.5" fill="currentColor"/>
+                        <div class="invitation-ornament my-2.5 sm:my-3.5 flex items-center justify-center w-full">
+                            <svg class="w-48 sm:w-56 h-9 text-[#c9ad84]" viewBox="0 0 300 42" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95)) drop-shadow(0 -0.5px 0 rgba(140,100,50,0.4));">
+                                <g stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                    <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                    <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                    <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                    <g transform="translate(300 0) scale(-1 1)">
+                                        <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                        <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                        <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                        <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                    </g>
+                                    <path d="M150 7 C141 13 141 20 150 24 C159 20 159 13 150 7Z" fill="currentColor" fill-opacity=".2"/>
+                                    <path d="M150 35 C141 29 141 22 150 18 C159 22 159 29 150 35Z" fill="currentColor" fill-opacity=".2"/>
+                                    <path d="M136 21 C142 15 146 15 150 18 C154 15 158 15 164 21 C158 27 154 27 150 24 C146 27 142 27 136 21Z" fill="currentColor" fill-opacity=".14"/>
+                                    <circle cx="150" cy="21" r="2.2" fill="currentColor"/>
+                                    <circle cx="138" cy="21" r="1.2" fill="currentColor"/>
+                                    <circle cx="162" cy="21" r="1.2" fill="currentColor"/>
+                                </g>
                             </svg>
                         </div>
 
@@ -455,34 +524,34 @@
                         <div class="w-full flex flex-col items-center">
 
                             {{-- Formal Invitation Honor Text --}}
-                            <p class="font-cinzel text-[9.5px] sm:text-[11px] font-semibold tracking-[0.24em] text-[#8a6826] uppercase">
+                            <p class="invitation-honor font-cinzel text-[9.5px] sm:text-[11px] font-semibold tracking-[0.24em] text-[#8a6826] uppercase">
                                 {{ $event->invitation_text }}
                             </p>
 
                             {{-- Optional Exhibitor Logo (More Enlarged) --}}
                             @if($customer->logo_url)
-                                <div class="mt-2.5 mb-1.5 flex items-center justify-center">
-                                    <div class="h-28 w-28 sm:h-32 sm:w-32 max-w-[280px] sm:max-w-[320px] rounded-2xl border-2 border-[#b48222]/50 bg-white/95 p-2 sm:p-2.5 shadow-[0_8px_24px_rgba(14,30,74,0.15)] flex items-center justify-center">
+                                <div class="exhibitor-logo-wrapper mt-2.5 mb-1.5 flex items-center justify-center">
+                                    <div class="exhibitor-logo-frame h-40 w-40 sm:h-44 sm:w-44 max-w-[280px] sm:max-w-[320px] rounded-2xl border border-[#b48222]/50 bg-white/95 p-1.5 sm:p-2 shadow-[0_8px_24px_rgba(14,30,74,0.15)] flex items-center justify-center">
                                         <img src="{{ $customer->logo_url }}" alt="{{ $customer->name }}" crossorigin="anonymous" class="h-full w-full object-contain rounded-xl">
                                     </div>
                                 </div>
                             @endif
 
                             {{-- Exhibitor Name (Refined, Slightly Smaller Font) --}}
-                            <h1 class="mt-1 text-lg sm:text-xl font-bold tracking-wider text-[#0e1e4a] font-cinzel leading-snug uppercase px-2" style="text-shadow: 0 1px 0 rgba(255,255,255,0.7);">
+                            <h1 class="exhibitor-name mt-1 text-lg sm:text-xl font-bold tracking-wider text-[#0e1e4a] font-cinzel leading-snug uppercase px-2" style="text-shadow: 0 1px 0 rgba(255,255,255,0.7);">
                                 {{ $customer->name }}
                             </h1>
 
                             {{-- Tier Badge (Clean, No Asterisk/Star) --}}
-                            <div class="mt-1.5 inline-flex items-center rounded-full border {{ $tierPillStyle }} px-3.5 py-0.5 shadow-2xs backdrop-blur-xs">
+                            <div class="exhibitor-tier mt-1.5 inline-flex items-center rounded-full border {{ $tierPillStyle }} px-3.5 py-0.5 shadow-2xs backdrop-blur-xs">
                                 <span class="font-cinzel text-[10px] sm:text-[11px] font-bold tracking-[0.22em] uppercase">
                                     {{ $tierTitle }}
                                 </span>
                             </div>
 
                             {{-- Official Event Access QR Code --}}
-                            <div class="mt-3 sm:mt-3.5 flex flex-col items-center">
-                                <div class="relative rounded-2xl border-2 border-[#b48222]/50 bg-white p-2 sm:p-2.5 shadow-[0_6px_22px_rgba(14,30,74,0.16)]">
+                            <div class="invitation-qr mt-3 sm:mt-3.5 flex flex-col items-center">
+                                <div class="invitation-qr-frame relative rounded-2xl border border-[#b48222]/50 bg-white p-2 sm:p-2.5 shadow-[0_6px_22px_rgba(14,30,74,0.16)]">
                                     @if($event->qr_code_url)
                                         <img src="{{ $event->qr_code_url }}" alt="Event Access QR Code" crossorigin="anonymous" class="h-24 w-24 sm:h-28 sm:w-28 object-contain rounded-xl">
                                     @else
@@ -530,72 +599,58 @@
                                         </svg>
                                     @endif
                                 </div>
-                                <p class="mt-1.5 font-cinzel text-[9px] sm:text-[10px] font-bold tracking-[0.24em] text-[#0e1e4a]/85 uppercase">
-                                    Exclusive Access QR Code
-                                </p>
                             </div>
 
                         </div>
 
                         {{-- 4. Lower Embossed Filigree Scrollwork Divider --}}
-                        <div class="my-2.5 sm:my-3.5 flex items-center justify-center w-full">
-                            <svg class="w-48 sm:w-56 h-5 text-[#c9ad84]" viewBox="0 0 240 20" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95)) drop-shadow(0 -0.5px 0 rgba(140,100,50,0.4));">
-                                <path d="M15 10 C35 3, 55 17, 75 10 C95 3, 105 10, 115 10 C120 10, 120 10, 125 10 C135 10, 145 3, 165 10 C185 17, 205 3, 225 10" stroke-width="1.3" stroke-linecap="round"/>
-                                <path d="M75 10 C68 4, 58 6, 54 11 C50 16, 58 18, 63 15 C68 12, 72 12, 75 10 Z" stroke-width="1" fill="currentColor" fill-opacity="0.18"/>
-                                <path d="M165 10 C172 4, 182 6, 186 11 C190 16, 182 18, 177 15 C172 12, 168 12, 165 10 Z" stroke-width="1" fill="currentColor" fill-opacity="0.18"/>
-                                <circle cx="120" cy="10" r="2.5" fill="currentColor"/>
-                                <circle cx="108" cy="10" r="1.5" fill="currentColor"/>
-                                <circle cx="132" cy="10" r="1.5" fill="currentColor"/>
+                        <div class="invitation-ornament flex items-center justify-center w-full" style="margin: 4px 0 0;">
+                            <svg class="w-48 sm:w-56 h-9 text-[#c9ad84]" viewBox="0 0 300 42" fill="none" stroke="currentColor" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.95)) drop-shadow(0 -0.5px 0 rgba(140,100,50,0.4));">
+                                <g stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                    <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                    <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                    <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                    <g transform="translate(300 0) scale(-1 1)">
+                                        <path d="M12 21 C30 21 38 8 54 8 C69 8 75 21 65 26 C57 30 50 24 55 18 C58 15 63 17 62 21 C61 24 58 24 57 22"/>
+                                        <path d="M16 21 C37 21 46 32 64 31 C82 30 85 16 101 16 C117 16 121 29 135 27 C142 26 145 22 150 21"/>
+                                        <path d="M28 18 C35 12 40 11 47 13 C44 18 39 21 32 22Z" fill="currentColor" fill-opacity=".16"/>
+                                        <path d="M70 28 C77 20 84 18 91 20 C87 26 80 30 72 31Z" fill="currentColor" fill-opacity=".16"/>
+                                    </g>
+                                    <path d="M150 7 C141 13 141 20 150 24 C159 20 159 13 150 7Z" fill="currentColor" fill-opacity=".2"/>
+                                    <path d="M150 35 C141 29 141 22 150 18 C159 22 159 29 150 35Z" fill="currentColor" fill-opacity=".2"/>
+                                    <path d="M136 21 C142 15 146 15 150 18 C154 15 158 15 164 21 C158 27 154 27 150 24 C146 27 142 27 136 21Z" fill="currentColor" fill-opacity=".14"/>
+                                    <circle cx="150" cy="21" r="2.2" fill="currentColor"/>
+                                    <circle cx="138" cy="21" r="1.2" fill="currentColor"/>
+                                    <circle cx="162" cy="21" r="1.2" fill="currentColor"/>
+                                </g>
                             </svg>
                         </div>
 
-                        {{-- 5. Lower Section: Embossed Diamond Accent & Official Timeless Asia Typography --}}
-                        <div class="relative w-full mt-1 pt-1 flex flex-col items-center">
+                        {{-- 5. Lower Section: Official Timeless Asia Typography --}}
+                        <div class="relative w-full flex flex-col items-center">
 
-                            {{-- Pure Vector Embossed 3D Diamond Wireframe on Lower Right --}}
-                            <svg class="absolute right-1 sm:right-3 -top-3 w-16 h-16 sm:w-20 sm:h-20 opacity-35 pointer-events-none text-[#b89b70]" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" style="filter: drop-shadow(0 1px 0 rgba(255,255,255,0.9));">
-                                <polygon points="50,15 75,32 50,85 25,32" />
-                                <line x1="25" y1="32" x2="75" y2="32" />
-                                <line x1="50" y1="15" x2="38" y2="32" />
-                                <line x1="50" y1="15" x2="62" y2="32" />
-                                <line x1="38" y1="32" x2="50" y2="85" />
-                                <line x1="62" y1="32" x2="50" y2="85" />
-                                <line x1="32" y1="23" x2="44" y2="32" />
-                                <line x1="68" y1="23" x2="56" y2="32" />
-                                <g transform="translate(18, -8) scale(0.65)" opacity="0.65">
-                                    <polygon points="50,15 75,32 50,85 25,32" />
-                                    <line x1="25" y1="32" x2="75" y2="32" />
-                                    <line x1="50" y1="15" x2="38" y2="32" />
-                                    <line x1="50" y1="15" x2="62" y2="32" />
-                                    <line x1="38" y1="32" x2="50" y2="85" />
-                                    <line x1="62" y1="32" x2="50" y2="85" />
-                                </g>
-                            </svg>
+
 
                             {{-- Official Timeless Asia Brand Logo Image --}}
                             <span class="sr-only">Timeless Asia - Gems &amp; Jewelry Exhibition</span>
                             <div class="flex flex-col items-center justify-center">
-                                <img src="{{ asset('images/timeless-asia-logo.png') }}" alt="{{ $event->title }} - {{ $event->subtitle ?: 'Gems & Jewelry Exhibition' }}" class="h-11 sm:h-13 w-auto max-w-[220px] sm:max-w-[260px] object-contain">
+                                <img src="{{ asset('images/timeless-asia-logo.png') }}" alt="{{ $event->title }} - {{ $event->subtitle ?: 'Gems & Jewelry Exhibition' }}" class="invitation-brand-logo h-11 sm:h-13 w-auto max-w-[220px] sm:max-w-[260px] object-contain">
                                 @if($event->edition)
-                                    <p class="font-montserrat text-[8.5px] sm:text-[9.5px] font-bold text-[#0e1e4a] tracking-widest uppercase mt-0.5">
+                                    <p class="invitation-edition font-montserrat text-[8.5px] sm:text-[9.5px] font-bold text-[#0e1e4a] tracking-widest uppercase mt-0.5">
                                         {{ $event->edition }}
                                     </p>
                                 @endif
                             </div>
 
                             {{-- Bottom Schedule & Venue Metadata Line --}}
-                            <div class="mt-2.5 pt-2 border-t border-[#0e1e4a]/15 w-full flex items-center justify-center gap-2 sm:gap-3 text-[9px] sm:text-[10px] font-bold text-[#0e1e4a] tracking-wider font-montserrat flex-wrap">
+                            <div class="invitation-schedule mt-2.5 pt-2 border-t border-[#0e1e4a]/15 w-full flex items-center justify-center gap-2 sm:gap-3 text-[9px] sm:text-[10px] font-bold text-[#0e1e4a] tracking-wider font-montserrat flex-wrap">
                                 <span>{{ $event->date_display }}</span>
                                 <span class="text-[#0e1e4a]/30">|</span>
                                 <span>10:00 AM to 7:00 PM</span>
                                 <span class="text-[#0e1e4a]/30">|</span>
                                 <span>{{ $event->venue }}</span>
                             </div>
-
-                            {{-- Card Footer Note --}}
-                            <p class="mt-1 font-cinzel text-[8px] sm:text-[8.5px] text-[#0e1e4a]/60 tracking-[0.24em] uppercase">
-                                {{ $event->footer_text ?: ($event->title . ' • ' . $event->edition . ' 2027') }}
-                            </p>
 
                         </div>
 
@@ -607,7 +662,7 @@
     </div>
 
     {{-- Download Button (Hidden in Print & Export) --}}
-    <div class="no-print my-6 flex items-center justify-center">
+    <div class="invitation-download no-print my-6 flex items-center justify-center">
         <button id="downloadBtn" type="button" onclick="downloadInvitationCard()" class="inline-flex items-center gap-2.5 rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_4px_25px_rgba(245,158,11,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
             <svg class="h-4 w-4 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span id="downloadBtnText">Download Card (PNG)</span>
@@ -622,33 +677,51 @@
             const intro = document.getElementById('invitationIntro');
             const card = document.querySelector('.invitation-card');
             const openButton = document.getElementById('openInvitationBtn');
-            const skipButton = document.getElementById('skipIntroBtn');
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             let opening = false;
-            let openTimer;
 
-            const finishOpening = (moveFocus = false) => {
+            const fitDoorPanels = () => {
+                intro?.querySelectorAll('.door-upper-panel').forEach(panel => {
+                    const leaf = panel.parentElement;
+                    const width = leaf.clientWidth;
+                    const height = panel.clientHeight;
+                    const inset = parseFloat(getComputedStyle(leaf).getPropertyValue('--door-panel-inset'));
+                    const radius = width - inset;
+                    if (radius <= inset || height <= width) return;
+
+                    // Offset the same circle as the outer arch, rather than stretching another ellipse.
+                    const top = width - Math.sqrt(radius * radius - inset * inset);
+                    const bottom = height - 2;
+                    const curve = `M ${inset} ${bottom} L ${inset} ${width} A ${radius} ${radius} 0 0 1 ${width - inset} ${top} L ${width - inset} ${bottom} Z`;
+                    panel.setAttribute('viewBox', `0 0 ${width} ${height}`);
+                    panel.querySelectorAll('.door-upper-curve').forEach(path => path.setAttribute('d', curve));
+                    panel.querySelector('.door-upper-shape').setAttribute('transform', panel.dataset.side === 'right' ? `translate(${width} 0) scale(-1 1)` : '');
+                    const artwork = panel.querySelector('.door-upper-artwork');
+                    artwork.setAttribute('width', width);
+                    artwork.setAttribute('height', height);
+                });
+            };
+            fitDoorPanels();
+            const doorPanelObserver = new ResizeObserver(fitDoorPanels);
+            if (card) doorPanelObserver.observe(card);
+
+            const finishOpening = () => {
+                doorPanelObserver.disconnect();
                 root.classList.remove('invitation-intro-active', 'invitation-intro-opening');
                 root.classList.add('invitation-card-revealed');
                 intro?.remove();
-                if (moveFocus) card?.focus({ preventScroll: true });
+                card?.focus({ preventScroll: true });
             };
 
-            const beginOpening = (skip = false) => {
+            const beginOpening = () => {
                 if (!intro || opening) return;
-                window.clearTimeout(openTimer);
-                if (skip) {
-                    finishOpening(true);
-                    return;
-                }
                 opening = true;
+                openButton.disabled = true;
                 root.classList.add('invitation-intro-opening');
-                window.setTimeout(() => finishOpening(true), reducedMotion ? 50 : 1400);
+                window.setTimeout(finishOpening, reducedMotion ? 50 : 1700);
             };
 
             openButton?.addEventListener('click', () => beginOpening());
-            skipButton?.addEventListener('click', () => beginOpening(true));
-            openTimer = window.setTimeout(() => beginOpening(), reducedMotion ? 900 : 4200);
         });
     </script>
     <script type="module">
@@ -667,7 +740,7 @@
             try {
                 var dataUrl = await domToPng(card, {
                     scale: 2,
-                    backgroundColor: '#051532',
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--invitation-blue').trim(),
                     quality: 1,
                 });
                 var link = document.createElement('a');

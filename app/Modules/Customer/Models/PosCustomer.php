@@ -30,14 +30,14 @@ class PosCustomer extends Model
     protected function logoUrl(): Attribute
     {
         return Attribute::get(fn (): ?string =>
-            $this->logo_path ? Storage::url($this->logo_path) : null
+            $this->logo_path ? asset('storage/' . ltrim($this->logo_path, '/')) : null
         );
     }
 
     protected function qrCodeUrl(): Attribute
     {
         return Attribute::get(fn (): ?string =>
-            $this->qr_code_path ? Storage::url($this->qr_code_path) : null
+            $this->qr_code_path ? asset('storage/' . ltrim($this->qr_code_path, '/')) : null
         );
     }
 

@@ -24,6 +24,7 @@ class EventDetail extends Model
         'contact_phone',
         'contact_email',
         'logo_path',
+        'qr_code_path',
         'banner_path',
         'footer_text',
         'is_active',
@@ -46,6 +47,7 @@ class EventDetail extends Model
             'invitation_text' => 'Cordially Requests The Honor Of Your Presence',
             'contact_phone' => '09450011223',
             'logo_path' => 'images/timeless-asia-logo-white.png',
+            'qr_code_path' => null,
             'banner_path' => 'images/timeless-asia-banner.jpg',
             'footer_text' => 'Timeless Asia • 4th Edition 2027',
             'is_active' => true,
@@ -59,11 +61,25 @@ class EventDetail extends Model
                 return asset($this->logo_path);
             }
             if (Storage::disk('public')->exists($this->logo_path)) {
-                return Storage::disk('public')->url($this->logo_path);
+                return asset('storage/' . ltrim($this->logo_path, '/'));
             }
         }
 
         return asset('images/timeless-asia-logo-white.png');
+    }
+
+    public function getQrCodeUrlAttribute(): ?string
+    {
+        if ($this->qr_code_path) {
+            if (file_exists(public_path($this->qr_code_path))) {
+                return asset($this->qr_code_path);
+            }
+            if (Storage::disk('public')->exists($this->qr_code_path)) {
+                return asset('storage/' . ltrim($this->qr_code_path, '/'));
+            }
+        }
+
+        return null;
     }
 
     public function getBannerUrlAttribute(): string
@@ -73,7 +89,7 @@ class EventDetail extends Model
                 return asset($this->banner_path);
             }
             if (Storage::disk('public')->exists($this->banner_path)) {
-                return Storage::disk('public')->url($this->banner_path);
+                return asset('storage/' . ltrim($this->banner_path, '/'));
             }
         }
 

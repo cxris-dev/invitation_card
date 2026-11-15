@@ -6,6 +6,7 @@ use App\Models\EventDetail;
 use App\Modules\Customer\Models\PosCustomer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class EventDetailController extends Controller
@@ -33,8 +34,10 @@ class EventDetailController extends Controller
             'contact_phone' => ['nullable', 'string', 'max:50'],
             'contact_email' => ['nullable', 'email', 'max:100'],
             'footer_text' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'mimes:png,jpg,jpeg,svg,webp', 'max:5120'],
-            'banner' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:10240'],
+            'logo' => ['nullable', 'file', 'mimes:png,jpg,jpeg,svg,webp', 'max:10240'],
+            'qr_code' => ['nullable', 'file', 'mimes:png,jpg,jpeg,svg,webp', 'max:10240'],
+            'remove_qr_code' => ['nullable', 'boolean'],
+            'banner' => ['nullable', 'file', 'mimes:png,jpg,jpeg,webp', 'max:10240'],
         ]);
 
         $event = EventDetail::first() ?? new EventDetail();
@@ -54,6 +57,19 @@ class EventDetailController extends Controller
         if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('events/logos', 'public');
             $event->logo_path = $path;
+        }
+
+        if ($request->hasFile('qr_code')) {
+            if ($event->qr_code_path && Storage::disk('public')->exists($event->qr_code_path)) {
+                Storage::disk('public')->delete($event->qr_code_path);
+            }
+            $path = $request->file('qr_code')->store('events/qr_codes', 'public');
+            $event->qr_code_path = $path;
+        } elseif ($request->boolean('remove_qr_code')) {
+            if ($event->qr_code_path && Storage::disk('public')->exists($event->qr_code_path)) {
+                Storage::disk('public')->delete($event->qr_code_path);
+            }
+            $event->qr_code_path = null;
         }
 
         if ($request->hasFile('banner')) {

@@ -135,7 +135,7 @@ class CustomerAttachmentTest extends TestCase
         Storage::disk('public')->assertExists($customer->qr_code_path);
     }
 
-    public function test_customer_list_shows_logo_and_qr_columns(): void
+    public function test_customer_list_shows_logo_and_does_not_show_qr_column(): void
     {
         $this->actingAs($this->admin, 'web');
 
@@ -151,7 +151,8 @@ class CustomerAttachmentTest extends TestCase
         Livewire::test(CustomerTable::class)
             ->assertStatus(200)
             ->assertSee('Royal Garden Hotel')
-            ->assertSee('View QR');
+            ->assertDontSee('QR Attachment')
+            ->assertDontSee('View QR');
     }
 
     public function test_temporary_uploaded_file_creates_valid_stream(): void

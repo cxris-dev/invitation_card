@@ -8,6 +8,7 @@
 <title>@yield('title', 'Management') - {{ config('app.name', 'Invitation Card') }}</title>
 @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot'))) @vite(['resources/css/app.css', 'resources/js/app.js']) @endif
 @livewireStyles
+@stack('styles')
 </head>
 <body x-data="{ sidebarOpen: false, sidebarCollapsed: false, sidebarHover: false, livewireToast: { message: '', title: 'Success', type: 'success' } }" x-on:toast.window="livewireToast = { message: $event.detail.message, title: $event.detail.title || ($event.detail.type === 'error' ? 'Error' : 'Success'), type: $event.detail.type || 'success' }; setTimeout(() => livewireToast.message = '', 3500)" x-init="sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true'" class="min-h-screen bg-[#f8f9fc] text-gray-800">
 <div :class="{ 'sidebar-collapsed': sidebarCollapsed, 'sidebar-hover': sidebarHover && sidebarCollapsed }" class="min-h-screen lg:flex">

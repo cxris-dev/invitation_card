@@ -12,7 +12,6 @@
                         <th class="px-5 py-3">Exhibitor</th>
                         <th class="px-5 py-3">Phone</th>
                         <th class="px-5 py-3">Level</th>
-                        <th class="px-5 py-3 text-center">QR Attachment</th>
                         <th class="px-5 py-3">Links</th>
                         <th class="px-5 py-3 text-right">Actions</th>
                     </tr>
@@ -53,22 +52,6 @@
                                     <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 border border-blue-200">Level 2 (Silver)</span>
                                 @else
                                     <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-700">Level 1</span>
-                                @endif
-                            </td>
-
-                            {{-- QR Attachment Column --}}
-                            <td class="px-5 py-3.5 text-center">
-                                @if($customer->qr_code_url)
-                                    <button type="button" wire:click="openPreview('{{ $customer->qr_code_url }}', '{{ addslashes($customer->name) }} - QR Attachment')" class="group relative inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 shadow-2xs hover:border-brand-300 hover:bg-brand-50/50 hover:text-brand-700 transition" title="Click to view QR code">
-                                        <img src="{{ $customer->qr_code_url }}" alt="QR" class="h-6 w-6 rounded object-cover">
-                                        <span>View QR</span>
-                                        <i data-lucide="maximize-2" class="h-3 w-3 text-gray-400 group-hover:text-brand-600"></i>
-                                    </button>
-                                @else
-                                    <span class="inline-flex items-center gap-1 text-xs text-gray-400">
-                                        <i data-lucide="qr-code" class="h-3.5 w-3.5 opacity-40"></i>
-                                        <span>None</span>
-                                    </span>
                                 @endif
                             </td>
 
@@ -147,7 +130,7 @@
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <div>
                         <h2 class="text-lg font-semibold text-gray-900">Add exhibitor</h2>
-                        <p class="mt-0.5 text-xs text-gray-500">Create a new exhibitor with contact details, logo and QR code.</p>
+                        <p class="mt-0.5 text-xs text-gray-500">Create a new exhibitor with contact details and logo.</p>
                     </div>
                     <button type="button" wire:click="closeCreate" class="rounded-lg p-2 text-gray-400 hover:bg-gray-100" aria-label="Close"><i data-lucide="x" class="h-5 w-5"></i></button>
                 </div>
@@ -188,7 +171,7 @@
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <div>
                         <h2 class="text-lg font-semibold text-gray-900">Edit exhibitor</h2>
-                        <p class="mt-0.5 text-xs text-gray-500">Update exhibitor details, logo and QR code attachment.</p>
+                        <p class="mt-0.5 text-xs text-gray-500">Update exhibitor details and logo.</p>
                     </div>
                     <button type="button" wire:click="closeEdit" class="rounded-lg p-2 text-gray-400 hover:bg-gray-100" aria-label="Close"><i data-lucide="x" class="h-5 w-5"></i></button>
                 </div>

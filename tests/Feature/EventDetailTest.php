@@ -109,4 +109,78 @@ class EventDetailTest extends TestCase
         $response->assertSee('Honors Your Distinguished Presence');
         $response->assertSee('Timeless Asia Luxe • Signature 2027');
     }
+
+    public function test_authenticated_user_can_upload_and_remove_event_qr_code(): void
+    {
+        Storage::fake('public');
+
+        $qrFile = UploadedFile::fake()->image('official_event_qr.png', 300, 300);
+
+        $response = $this->actingAs($this->admin, 'web')->put(route('management.events.update'), [
+            'title' => 'Timeless Asia',
+            'date_display' => 'JANUARY 22 - 24 , 2027',
+            'venue' => 'Lotte Hotel Yangon Level 2',
+            'qr_code' => $qrFile,
+        ]);
+
+        $response->assertRedirect(route('management.events.index'));
+        $event = EventDetail::first();
+        $this->assertNotNull($event->qr_code_path);
+        Storage::disk('public')->assertExists($event->qr_code_path);
+        $this->assertNotNull($event->qr_code_url);
+
+        // Verify removing QR code reverts to default
+        $removeResponse = $this->actingAs($this->admin, 'web')->put(route('management.events.update'), [
+            'title' => 'Timeless Asia',
+            'date_display' => 'JANUARY 22 - 24 , 2027',
+            'venue' => 'Lotte Hotel Yangon Level 2',
+            'remove_qr_code' => 1,
+        ]);
+
+        $removeResponse->assertRedirect(route('management.events.index'));
+        $event->refresh();
+        $this->assertNull($event->qr_code_path);
+        $this->assertNull($event->qr_code_url);
+    }
+
+    public function test_all_invitation_cards_use_single_event_qr_code(): void
+    {
+        Storage::fake('public');
+
+        $qrPath = 'events/qr_codes/shared_event_qr.png';
+        Storage::disk('public')->put($qrPath, 'fake-event-qr-content');
+
+        EventDetail::query()->updateOrCreate(['id' => 1], [
+            'title' => 'Timeless Asia',
+            'date_display' => 'JANUARY 22 - 24 , 2027',
+            'venue' => 'Lotte Hotel Yangon Level 2',
+            'qr_code_path' => $qrPath,
+        ]);
+
+        $exhibitor1 = PosCustomer::create([
+            'name' => 'Exhibitor Alpha',
+            'phone' => '0911111111',
+            'customer_level' => 1,
+            'created_by' => $this->admin->id,
+        ]);
+
+        $exhibitor2 = PosCustomer::create([
+            'name' => 'Exhibitor Beta',
+            'phone' => '0922222222',
+            'customer_level' => 3,
+            'created_by' => $this->admin->id,
+        ]);
+
+        $card1 = $this->get($exhibitor1->invitation_url);
+        $card1->assertStatus(200);
+        $card1->assertSee('Exhibitor Alpha');
+        $card1->assertSee($qrPath);
+        $card1->assertSee('alt="Event Access QR Code"', false);
+
+        $card2 = $this->get($exhibitor2->invitation_url);
+        $card2->assertStatus(200);
+        $card2->assertSee('Exhibitor Beta');
+        $card2->assertSee($qrPath);
+        $card2->assertSee('alt="Event Access QR Code"', false);
+    }
 }
